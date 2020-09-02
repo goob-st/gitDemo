@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+	"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.win.store.mapper.AddressMapper">
+
+	<!-- 增加新的收货地址数据 -->
+	<!-- Integer addnew(Address address) -->
+	<insert id="addnew"
+		useGeneratedKeys="true"
+		keyProperty="id">
+		INSERT INTO t_address (
+			uid, name,
+		    province, city, 
+		    area, district, 
+		    zip, address,
+		    phone, tel,
+		    tag, is_default,
+		    created_user, created_time,
+		    modified_user, modified_time 
+		) VALUES (
+			#{uid}, #{name},
+		    #{province}, #{city}, 
+		    #{area}, #{district}, 
+		    #{zip}, #{address},
+		    #{phone}, #{tel},
+		    #{tag}, #{isDefault},
+		    #{createdUser}, #{createdTime},
+		    #{modifiedUser}, #{modifiedTime}
+		)
+	</insert>
+
+	<!-- 根据用户id获取该用户的收货地址数据的数量 -->
+	<!-- Integer getCountByUid(Integer uid) -->
+	<select id="getCountByUid"
+		resultType="java.lang.Integer">
+		SELECT 
+			COUNT(id) 
+		FROM 
+			t_address 
+		WHERE 
+			uid=#{uid}
+	</select>
+
+	<!-- 获取某用户的收货地址列表 -->
+	<!-- List<Address> findByUid(Integer uid) -->
+	<select id="findByUid"
+			resultType="com.win.store.entity.Address">
+		SELECT
+			id, name,
+			phone, district,
+			address, tag,
+			is_default AS isDefault
+		FROM
+			t_address
+		WHERE
+			uid=#{uid}
+		ORDER BY
+			is_default DESC,
+			modified_time DESC
+	</select>
+
+	<!-- 根据收获地址ID查询用户ID -->
+	<!-- Address findById(Integer id) -->
+	<select id="findById" resultType="com.win.store.entity.Address">
+		select
+		 	uid, name,
+		    province, city,
+		    area, district,
+		    zip, address,
+		    phone, tel,tag,
+		    is_default as isDefault
+		from
+			t_address
+		where
+			id = #{id}
+	</select>
+
+	<!-- 设置用户的收货地址全部设置为非默认 -->
+	<!-- Integer updateNonDefault(Integer uid) -->
+	<update id="updateNonDefault">
+		update
+			t_address
+		set
+			is_default=0
+		where
+			uid = #{uid}
+	</update>
+
+	<!-- 将指定id的收货地址设置为默认 -->
+	<!-- Integer updateDefault(Integer id); -->
+	<update id="updateDefault">
+		update
+			t_address
+		set
+			is_default=1,modified_user=#{modifiedUser},modified_time=#{modifiedTime}
+		where
+			id = #{id}
+	</update>
+
+	<!-- 删除收货地址数据 -->
+	<!-- Integer deleteById(Integer id) -->
+	<delete id="deleteById">
+		delete from t_address where id = #{id}
+	</delete>
+
+	<!-- 查询用户最后修改时间的收货地址数据数据 -->
+	<!-- Address findLastModified(Integer id) -->
+	<select id="findLastModified" resultType="com.win.store.entity.Address">
+		select id
+		from t_address
+		where uid = #{uid}
+		order by modified_time desc limit 0,1
+	</select>
+
+	<!-- 修改用户收货地址 -->
+	<!-- Address updateAddnew(Integer id, Address address) -->
+	<update id="updateAddnew">
+		update
+		t_address
+		set
+		 <if test="name != null">
+		 	name = #{name},
+		 </if>
+		 	province = #{province},city = #{city} , area = #{area}, district = #{district},
+			zip = #{zip}, address = #{address},
+			phone = #{phone}, tel = #{tel},tag = #{tag} ,
+			modified_user=#{modifiedUser},
+			modified_time=#{modifiedTime}
+		where
+			id=#{id}
+	</update>
+
+</mapper>
+
+
+
+
+

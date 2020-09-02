@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+	"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.win.store.mapper.DistrictMapper">
+
+	<!-- 根据父级代号获取子级的省/市/区的列表 -->
+	<!-- -->
+	<select id="findByParent" resultType="com.win.store.entity.District">
+		select
+			id,parent,code,name
+		from
+			t_dict_district
+		where
+			parent = #{parent}
+		order by code
+	</select>
+
+	<!-- 根据代码获取省/市/区的详情 -->
+	<!-- -->
+	<select id="findByCode" resultType="com.win.store.entity.District">
+		select
+			id,parent,code,name
+		from
+			t_dict_district
+		where
+			code = #{code}
+	</select>
+	
+</mapper>
+
+
+
+
+

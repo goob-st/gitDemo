@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.win.store.mapper.GoodsMapper">
+    <!-- 根据商品分类,查询商品列表 -->
+    <!-- List<Goods> findByCategory(@Param("categoryId") Long categoryId,@Param("offset") Integer offset,@Param("count") Integer count); -->
+    <select id="findByCategory" resultType="com.win.store.entity.Goods">
+        select
+            id,title,price,image,
+            sell_point AS sellPoint
+        from
+            t_goods
+        where
+            category_id = #{categoryId}
+        order by
+            priority desc
+        limit #{offset},#{count}
+    </select>
+
+    <!-- 根据id查询商品详情 -->
+    <!-- Goods findById(Long id); -->
+    <select id="findById" resultType="com.win.store.entity.Goods">
+        select
+            id,category_id AS categoryId,
+            item_type AS itemType,title,
+            sell_point AS sellPoint,price,num,
+            barcode,image,status,priority
+        from
+            t_goods
+        where
+            id=#{id}
+    </select>
+
+    <!-- 根据优先级或许商品信息 -->
+    <!-- findByPriority -->
+    <select id="findByPriority" resultType="com.win.store.entity.Goods">
+        select
+            id,title,price,image
+        from
+            t_goods
+        where
+            status = 1 and num>0
+        order by priority desc LIMIT 0,#{count}
+    </select>
+
+
+</mapper>
